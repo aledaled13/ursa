@@ -504,41 +504,114 @@
             margin-bottom: 24px;
         }
 
+        .rating-container {
+            margin-bottom: 24px;
+        }
+
+        .rating-display {
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .rating-value {
+            font-size: 48px;
+            font-weight: 700;
+            font-family: var(--font-display);
+            transition: color 0.2s;
+        }
+
+        .rating-value.score-low { color: #ef4444; }
+        .rating-value.score-mid-low { color: #f97316; }
+        .rating-value.score-mid { color: #eab308; }
+        .rating-value.score-mid-high { color: #84cc16; }
+        .rating-value.score-high { color: #22c55e; }
+
         .rating-buttons {
             display: flex;
-            gap: 8px;
-            margin-bottom: 20px;
+            gap: 6px;
+            flex-wrap: wrap;
+            justify-content: center;
         }
 
         .rating-btn {
-            flex: 1;
-            padding: 16px 8px;
+            width: 44px;
+            height: 44px;
             border-radius: var(--radius-md);
             border: 2px solid var(--border);
             background: var(--bg-card);
             color: var(--text-secondary);
-            font-size: 24px;
+            font-size: 16px;
+            font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.15s;
         }
 
         .rating-btn:hover {
             border-color: var(--border-light);
+            transform: scale(1.05);
         }
 
         .rating-btn.selected {
-            border-color: var(--accent);
-            background: var(--accent-soft);
-            color: var(--text-primary);
+            color: white;
+            transform: scale(1.1);
         }
 
-        .rating-label {
-            display: block;
-            font-size: 10px;
-            margin-top: 4px;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
+        .rating-btn.score-0 { border-color: #dc2626; }
+        .rating-btn.score-1 { border-color: #dc2626; }
+        .rating-btn.score-2 { border-color: #ef4444; }
+        .rating-btn.score-3 { border-color: #f97316; }
+        .rating-btn.score-4 { border-color: #f97316; }
+        .rating-btn.score-5 { border-color: #eab308; }
+        .rating-btn.score-6 { border-color: #eab308; }
+        .rating-btn.score-7 { border-color: #84cc16; }
+        .rating-btn.score-8 { border-color: #22c55e; }
+        .rating-btn.score-9 { border-color: #16a34a; }
+        .rating-btn.score-10 { border-color: #15803d; }
+
+        .rating-btn.selected.score-0,
+        .rating-btn.selected.score-1,
+        .rating-btn.selected.score-2 { background: #ef4444; border-color: #ef4444; }
+        .rating-btn.selected.score-3,
+        .rating-btn.selected.score-4 { background: #f97316; border-color: #f97316; }
+        .rating-btn.selected.score-5,
+        .rating-btn.selected.score-6 { background: #eab308; border-color: #eab308; }
+        .rating-btn.selected.score-7,
+        .rating-btn.selected.score-8 { background: #22c55e; border-color: #22c55e; }
+        .rating-btn.selected.score-9,
+        .rating-btn.selected.score-10 { background: #16a34a; border-color: #16a34a; }
+
+        /* History dots on challenge card */
+        .challenge-history {
+            display: flex;
+            gap: 3px;
+            align-items: center;
         }
+
+        .history-dot {
+            width: 8px;
+            height: 20px;
+            border-radius: 2px;
+        }
+
+        .history-dot.score-low { background: #ef4444; }
+        .history-dot.score-mid-low { background: #f97316; }
+        .history-dot.score-mid { background: #eab308; }
+        .history-dot.score-mid-high { background: #84cc16; }
+        .history-dot.score-high { background: #22c55e; }
+
+        .challenge-avg {
+            font-size: 14px;
+            font-weight: 600;
+            margin-left: 8px;
+            min-width: 28px;
+            text-align: right;
+        }
+
+        .challenge-avg.score-low { color: #ef4444; }
+        .challenge-avg.score-mid-low { color: #f97316; }
+        .challenge-avg.score-mid { color: #eab308; }
+        .challenge-avg.score-mid-high { color: #84cc16; }
+        .challenge-avg.score-high { color: #22c55e; }
 
         .notes-input {
             width: 100%;
@@ -682,6 +755,12 @@
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
         }
 
         .animate-in {
@@ -903,30 +982,26 @@
                 <div class="modal-handle"></div>
                 <h2 class="modal-title">Comment ça s'est passé ?</h2>
                 
-                <div class="rating-buttons" id="rating-buttons">
-                    <button class="rating-btn" data-rating="1">
-                        😰
-                        <span class="rating-label">Dur</span>
-                    </button>
-                    <button class="rating-btn" data-rating="2">
-                        😐
-                        <span class="rating-label">Moyen</span>
-                    </button>
-                    <button class="rating-btn" data-rating="3">
-                        🙂
-                        <span class="rating-label">Bien</span>
-                    </button>
-                    <button class="rating-btn" data-rating="4">
-                        😊
-                        <span class="rating-label">Super</span>
-                    </button>
-                    <button class="rating-btn" data-rating="5">
-                        🤩
-                        <span class="rating-label">Top !</span>
-                    </button>
+                <div class="rating-container">
+                    <div class="rating-display">
+                        <span class="rating-value" id="rating-display">—</span>
+                    </div>
+                    <div class="rating-buttons" id="rating-buttons">
+                        <button class="rating-btn score-0" data-rating="0">0</button>
+                        <button class="rating-btn score-1" data-rating="1">1</button>
+                        <button class="rating-btn score-2" data-rating="2">2</button>
+                        <button class="rating-btn score-3" data-rating="3">3</button>
+                        <button class="rating-btn score-4" data-rating="4">4</button>
+                        <button class="rating-btn score-5" data-rating="5">5</button>
+                        <button class="rating-btn score-6" data-rating="6">6</button>
+                        <button class="rating-btn score-7" data-rating="7">7</button>
+                        <button class="rating-btn score-8" data-rating="8">8</button>
+                        <button class="rating-btn score-9" data-rating="9">9</button>
+                        <button class="rating-btn score-10" data-rating="10">10</button>
+                    </div>
                 </div>
 
-                <textarea class="notes-input" id="notes-input" rows="3" placeholder="Notes personnelles (optionnel)..."></textarea>
+                <textarea class="notes-input" id="notes-input" rows="2" placeholder="Notes (optionnel)..."></textarea>
 
                 <button class="btn-primary" id="save-eval-btn" onclick="saveEvaluation()">Enregistrer</button>
             </div>
@@ -1058,8 +1133,41 @@
             });
         }
 
+        function getScoreClass(score) {
+            if (score <= 2) return 'score-low';
+            if (score <= 4) return 'score-mid-low';
+            if (score <= 6) return 'score-mid';
+            if (score <= 8) return 'score-mid-high';
+            return 'score-high';
+        }
+
+        function getChallengeHistory(challengeId, limit = 5) {
+            return state.completions
+                .filter(c => c.challengeId === challengeId)
+                .slice(-limit);
+        }
+
+        function getChallengeAverage(challengeId, limit = 10) {
+            const history = state.completions
+                .filter(c => c.challengeId === challengeId)
+                .slice(-limit);
+            if (history.length === 0) return null;
+            const sum = history.reduce((acc, c) => acc + c.rating, 0);
+            return (sum / history.length).toFixed(1);
+        }
+
         function renderChallengeCard(challenge) {
             const completed = isChallengeCompletedToday(challenge.id);
+            const history = getChallengeHistory(challenge.id, 5);
+            const avg = getChallengeAverage(challenge.id, 10);
+            
+            const historyDots = history.length > 0 
+                ? `<div class="challenge-history">
+                    ${history.map(h => `<div class="history-dot ${getScoreClass(h.rating)}"></div>`).join('')}
+                    ${avg ? `<span class="challenge-avg ${getScoreClass(parseFloat(avg))}">${avg}</span>` : ''}
+                   </div>`
+                : '';
+
             return `
                 <div class="challenge-card ${completed ? 'completed' : ''}" onclick="showDetail(${challenge.id})">
                     <div class="challenge-level level-${challenge.level}">
@@ -1069,6 +1177,7 @@
                         <div class="challenge-title">${challenge.title}</div>
                         <div class="challenge-category">${challenge.categoryLabel}</div>
                     </div>
+                    ${historyDots}
                     <div class="challenge-check">
                         ${completed ? '✓' : ''}
                     </div>
@@ -1151,12 +1260,11 @@
                     const challenge = challenges.find(c => c.id === comp.challengeId);
                     const date = new Date(comp.date);
                     const dateStr = date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
-                    const ratings = ['😰', '😐', '🙂', '😊', '🤩'];
                     return `
                         <div class="history-item">
                             <span class="history-date">${dateStr}</span>
                             <span class="history-title">${challenge?.title || 'Défi inconnu'}</span>
-                            <span class="history-rating">${ratings[comp.rating - 1] || ''}</span>
+                            <span class="history-rating ${getScoreClass(comp.rating)}" style="font-weight: 600;">${comp.rating}/10</span>
                         </div>
                     `;
                 }).join('');
@@ -1176,6 +1284,8 @@
         function openEvalModal() {
             state.currentRating = null;
             document.querySelectorAll('.rating-btn').forEach(b => b.classList.remove('selected'));
+            document.getElementById('rating-display').textContent = '—';
+            document.getElementById('rating-display').className = 'rating-value';
             document.getElementById('notes-input').value = '';
             document.getElementById('eval-modal').classList.add('active');
         }
@@ -1185,11 +1295,11 @@
         }
 
         function saveEvaluation() {
-            if (!state.currentRating) {
+            if (state.currentRating === null) {
                 // Highlight rating buttons
-                document.querySelector('.rating-buttons').style.animation = 'shake 0.3s';
+                document.querySelector('.rating-container').style.animation = 'shake 0.3s';
                 setTimeout(() => {
-                    document.querySelector('.rating-buttons').style.animation = '';
+                    document.querySelector('.rating-container').style.animation = '';
                 }, 300);
                 return;
             }
@@ -1300,9 +1410,14 @@
             // Rating buttons
             document.querySelectorAll('.rating-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
-                    state.currentRating = parseInt(btn.dataset.rating);
+                    const rating = parseInt(btn.dataset.rating);
+                    state.currentRating = rating;
                     document.querySelectorAll('.rating-btn').forEach(b => b.classList.remove('selected'));
                     btn.classList.add('selected');
+                    
+                    const display = document.getElementById('rating-display');
+                    display.textContent = rating;
+                    display.className = 'rating-value ' + getScoreClass(rating);
                 });
             });
 
