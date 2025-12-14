@@ -1,0 +1,284 @@
+[
+    {
+        "id": 1,
+        "title": "Dire bonjour à un inconnu",
+        "category": "small-talk",
+        "categoryLabel": "Small talk",
+        "level": 1,
+        "description": "Dis bonjour ou souris à une personne que tu croises. C'est tout.",
+        "context": "Dans la rue, un couloir, l'ascenseur, une file d'attente... N'importe où.",
+        "tips": [
+            "Un simple \"Bonjour\" ou un hochement de tête suffit",
+            "Pas besoin d'engager une conversation",
+            "Si la personne ne répond pas, ce n'est pas grave"
+        ]
+    },
+    {
+        "id": 2,
+        "title": "Faire un compliment sincère",
+        "category": "small-talk",
+        "categoryLabel": "Small talk",
+        "level": 1,
+        "description": "Fais un compliment authentique à quelqu'un : collègue, vendeur, serveur, ami.",
+        "context": "Choisis quelque chose que tu remarques vraiment et qui te plaît.",
+        "tips": [
+            "Sois spécifique : \"J'aime bien ta montre\" plutôt que \"T'es cool\"",
+            "Reste simple et naturel",
+            "N'attends pas de réponse particulière"
+        ]
+    },
+    {
+        "id": 3,
+        "title": "Remercier avec intention",
+        "category": "connexion",
+        "categoryLabel": "Connexion",
+        "level": 1,
+        "description": "Remercie quelqu'un en le regardant dans les yeux et en étant vraiment présent.",
+        "context": "Un serveur, un caissier, un collègue qui t'aide...",
+        "tips": [
+            "Prends 2 secondes de plus que d'habitude",
+            "Contact visuel + sourire",
+            "Utilise son prénom si tu le connais"
+        ]
+    },
+    {
+        "id": 4,
+        "title": "Demander l'heure ou une direction",
+        "category": "small-talk",
+        "categoryLabel": "Small talk",
+        "level": 1,
+        "description": "Aborde un inconnu pour lui demander l'heure ou une direction, même si tu n'en as pas besoin.",
+        "context": "L'objectif est de pratiquer l'approche, pas d'obtenir l'info.",
+        "tips": [
+            "\"Excusez-moi, vous avez l'heure ?\"",
+            "\"Pardon, vous savez où est la station de métro ?\"",
+            "Remercie et passe ton chemin"
+        ]
+    },
+    {
+        "id": 5,
+        "title": "Poser une question de suivi",
+        "category": "connexion",
+        "categoryLabel": "Connexion",
+        "level": 2,
+        "description": "Quand quelqu'un te raconte quelque chose, pose une question pour creuser.",
+        "context": "Au lieu de juste hocher la tête, montre un intérêt actif.",
+        "tips": [
+            "\"Ah c'était comment ?\"",
+            "\"Et qu'est-ce que t'en as pensé ?\"",
+            "\"C'est quoi la suite ?\"",
+            "Écoute vraiment la réponse"
+        ]
+    },
+    {
+        "id": 6,
+        "title": "Initier le small talk",
+        "category": "small-talk",
+        "categoryLabel": "Small talk",
+        "level": 2,
+        "description": "Lance une micro-conversation avec quelqu'un dans une situation d'attente.",
+        "context": "File d'attente, salle d'attente, ascenseur, transports...",
+        "tips": [
+            "Commente la situation : \"Y'a du monde aujourd'hui\"",
+            "Pose une question simple : \"Vous savez si c'est toujours comme ça ?\"",
+            "2-3 échanges suffisent"
+        ]
+    },
+    {
+        "id": 7,
+        "title": "Maintenir le contact visuel",
+        "category": "connexion",
+        "categoryLabel": "Connexion",
+        "level": 2,
+        "description": "Pendant une conversation, maintiens le contact visuel plus longtemps que d'habitude.",
+        "context": "Lors d'une conversation normale avec quelqu'un.",
+        "tips": [
+            "Regarde entre les yeux si c'est plus facile",
+            "Détourne le regard naturellement de temps en temps",
+            "Observe comment l'autre réagit"
+        ]
+    },
+    {
+        "id": 8,
+        "title": "Exprimer une préférence mineure",
+        "category": "assertivite",
+        "categoryLabel": "Assertivité",
+        "level": 2,
+        "description": "Exprime une préférence au lieu d'accepter le défaut.",
+        "context": "Au restaurant, dans un magasin, avec des amis...",
+        "tips": [
+            "\"Je préférerais la table près de la fenêtre\"",
+            "\"Est-ce que je pourrais avoir... à la place ?\"",
+            "Reste poli mais affirme ton choix"
+        ]
+    },
+    {
+        "id": 9,
+        "title": "Conversation de 2+ minutes avec un inconnu",
+        "category": "small-talk",
+        "categoryLabel": "Small talk",
+        "level": 3,
+        "description": "Engage une vraie conversation avec un inconnu, pas juste un échange.",
+        "context": "Événement, soirée, salle d'attente, bar, conférence...",
+        "tips": [
+            "Commence par un commentaire sur le contexte",
+            "Pose des questions ouvertes",
+            "Partage aussi quelque chose sur toi",
+            "C'est OK si ça dure moins de 2 min"
+        ]
+    },
+    {
+        "id": 10,
+        "title": "Dire non sans te justifier",
+        "category": "assertivite",
+        "categoryLabel": "Assertivité",
+        "level": 3,
+        "description": "Refuse une demande ou invitation sans donner d'excuse élaborée.",
+        "context": "Quelqu'un te demande un service, une sortie, un engagement...",
+        "tips": [
+            "\"Non, je ne peux pas cette fois\"",
+            "\"Merci mais ça ne va pas être possible\"",
+            "Pas besoin de mentir ou d'inventer une excuse"
+        ]
+    },
+    {
+        "id": 11,
+        "title": "Donner ton avis sans qu'on te le demande",
+        "category": "assertivite",
+        "categoryLabel": "Assertivité",
+        "level": 3,
+        "description": "Dans une conversation de groupe, partage ton opinion spontanément.",
+        "context": "Réunion, discussion entre amis, débat informel...",
+        "tips": [
+            "\"Moi je pense que...\"",
+            "\"Perso, je vois ça différemment\"",
+            "Tu n'as pas besoin d'avoir raison"
+        ]
+    },
+    {
+        "id": 12,
+        "title": "Reconnecter avec une vieille connaissance",
+        "category": "connexion",
+        "categoryLabel": "Connexion",
+        "level": 3,
+        "description": "Envoie un message à quelqu'un que tu n'as pas contacté depuis longtemps.",
+        "context": "Ancien collègue, ami perdu de vue, ancienne connaissance...",
+        "tips": [
+            "\"Hey ! Je pensais à toi, comment tu vas ?\"",
+            "Mentionne un souvenir partagé",
+            "Pas besoin d'avoir de raison particulière"
+        ]
+    },
+    {
+        "id": 13,
+        "title": "Proposer un café à une connaissance",
+        "category": "connexion",
+        "categoryLabel": "Connexion",
+        "level": 4,
+        "description": "Invite quelqu'un que tu connais peu mais que tu aimerais mieux connaître.",
+        "context": "Collègue, voisin, connaissance de sport/hobby, ami d'ami...",
+        "tips": [
+            "\"Ça te dirait qu'on prenne un café un de ces jours ?\"",
+            "Propose une date concrète",
+            "Un refus n'est pas personnel"
+        ]
+    },
+    {
+        "id": 14,
+        "title": "Exprimer un désaccord respectueusement",
+        "category": "assertivite",
+        "categoryLabel": "Assertivité",
+        "level": 4,
+        "description": "Quand tu n'es pas d'accord avec quelqu'un, dis-le clairement mais avec respect.",
+        "context": "Discussion, réunion, débat...",
+        "tips": [
+            "\"Je vois les choses différemment...\"",
+            "\"Je comprends ton point, mais...\"",
+            "Argumente sans attaquer"
+        ]
+    },
+    {
+        "id": 15,
+        "title": "Demander du feedback",
+        "category": "vulnerabilite",
+        "categoryLabel": "Vulnérabilité",
+        "level": 4,
+        "description": "Demande à quelqu'un ce qu'il pense vraiment de quelque chose que tu as fait.",
+        "context": "Travail, projet perso, comportement, présentation...",
+        "tips": [
+            "\"Sois honnête, qu'est-ce que t'en as pensé ?\"",
+            "Écoute sans te défendre",
+            "Remercie même si c'est dur à entendre"
+        ]
+    },
+    {
+        "id": 16,
+        "title": "Admettre que tu ne sais pas",
+        "category": "vulnerabilite",
+        "categoryLabel": "Vulnérabilité",
+        "level": 4,
+        "description": "Dans une conversation où tu es censé savoir, admets ton ignorance.",
+        "context": "Réunion, discussion technique, débat...",
+        "tips": [
+            "\"Honnêtement, je ne sais pas\"",
+            "\"C'est une bonne question, je vais me renseigner\"",
+            "C'est souvent perçu positivement"
+        ]
+    },
+    {
+        "id": 17,
+        "title": "Partager quelque chose de personnel",
+        "category": "vulnerabilite",
+        "categoryLabel": "Vulnérabilité",
+        "level": 5,
+        "description": "Partage une difficulté, une peur ou une insécurité avec quelqu'un de confiance.",
+        "context": "Conversation intime avec un ami, proche, ou même nouvelle connaissance.",
+        "tips": [
+            "Choisis le bon moment et la bonne personne",
+            "Tu n'as pas besoin de tout déballer",
+            "Observe comment ça approfondit la connexion"
+        ]
+    },
+    {
+        "id": 18,
+        "title": "Tenir un silence sans le combler",
+        "category": "inconfort",
+        "categoryLabel": "Inconfort",
+        "level": 5,
+        "description": "Quand un silence s'installe dans une conversation, ne le remplis pas.",
+        "context": "Laisse l'autre personne reprendre la parole.",
+        "tips": [
+            "Respire et reste présent",
+            "Maintiens un langage corporel ouvert",
+            "Le silence n'est pas toujours gênant"
+        ]
+    },
+    {
+        "id": 19,
+        "title": "Donner un feedback difficile",
+        "category": "assertivite",
+        "categoryLabel": "Assertivité",
+        "level": 5,
+        "description": "Dis à quelqu'un quelque chose qu'il a besoin d'entendre, même si c'est inconfortable.",
+        "context": "Un ami, collègue, proche... quelque chose de constructif.",
+        "tips": [
+            "Sois direct mais bienveillant",
+            "Parle de l'impact sur toi",
+            "Propose une solution si possible"
+        ]
+    },
+    {
+        "id": 20,
+        "title": "Aborder un conflit latent",
+        "category": "inconfort",
+        "categoryLabel": "Inconfort",
+        "level": 5,
+        "description": "Parle d'un sujet de tension que tu évites avec quelqu'un.",
+        "context": "Quelque chose qui te pèse et que tu repousses.",
+        "tips": [
+            "\"J'aimerais qu'on parle de quelque chose...\"",
+            "Exprime tes sentiments sans accuser",
+            "Écoute sa perspective"
+        ]
+    }
+]
