@@ -426,11 +426,66 @@
         .action-bar {
             padding: 16px 20px;
             padding-bottom: calc(16px + env(safe-area-inset-bottom));
-            background: linear-gradient(to top, var(--bg-primary) 80%, transparent);
+            background: var(--bg-primary);
             position: absolute;
             bottom: 0;
             left: 0;
             right: 0;
+            max-height: 50vh;
+            overflow-y: auto;
+        }
+
+        .detail-stats {
+            margin-top: 16px;
+            display: none;
+        }
+
+        .detail-stats-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .detail-stats-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .detail-stats-avg {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .detail-stats-list {
+            background: var(--bg-card);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+        }
+
+        .detail-stats-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .detail-stats-item:last-child {
+            border-bottom: none;
+        }
+
+        .detail-stats-date {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .detail-stats-score {
+            font-size: 14px;
+            font-weight: 600;
         }
 
         .btn-primary {
@@ -909,6 +964,9 @@
                 <button class="btn-primary" id="detail-action-btn" onclick="handleChallengeAction()">
                     C'est fait !
                 </button>
+                <div class="detail-stats" id="detail-stats">
+                    <!-- Dynamically populated -->
+                </div>
             </div>
         </div>
 
@@ -1187,7 +1245,8 @@
 
         function renderDetail(challengeId) {
             const challenge = challenges.find(c => c.id === challengeId);
-            const completed = isChallengeCompletedToday(challenge.id);
+            const history = getChallengeHistory(challenge.id, 10);
+            const avg = getChallengeAverage(challenge.id, 10);
             
             const content = document.getElementById('detail-content');
             content.innerHTML = `
@@ -1215,14 +1274,36 @@
                 </div>
             `;
 
-            const btn = document.getElementById('detail-action-btn');
-            if (completed) {
-                btn.textContent = '✓ Déjà complété aujourd\'hui';
-                btn.classList.add('completed');
+            // Stats section (under action bar)
+            const statsSection = document.getElementById('detail-stats');
+            if (history.length > 0) {
+                statsSection.innerHTML = `
+                    <div class="detail-stats-header">
+                        <span class="detail-stats-title">Historique</span>
+                        ${avg ? `<span class="detail-stats-avg ${getScoreClass(parseFloat(avg))}">Moyenne: ${avg}</span>` : ''}
+                    </div>
+                    <div class="detail-stats-list">
+                        ${history.slice().reverse().map(h => {
+                            const date = new Date(h.date);
+                            const dateStr = date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+                            return `
+                                <div class="detail-stats-item">
+                                    <span class="detail-stats-date">${dateStr}</span>
+                                    <span class="detail-stats-score ${getScoreClass(h.rating)}">${h.rating}/10</span>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                `;
+                statsSection.style.display = 'block';
             } else {
-                btn.textContent = 'C\'est fait !';
-                btn.classList.remove('completed');
+                statsSection.innerHTML = '';
+                statsSection.style.display = 'none';
             }
+
+            const btn = document.getElementById('detail-action-btn');
+            btn.textContent = 'C\'est fait !';
+            btn.classList.remove('completed');
         }
 
         function renderProgress() {
@@ -1275,9 +1356,6 @@
         // ACTIONS
         // ============================================
         function handleChallengeAction() {
-            const challenge = challenges.find(c => c.id === state.currentChallengeId);
-            if (isChallengeCompletedToday(challenge.id)) return;
-            
             openEvalModal();
         }
 
