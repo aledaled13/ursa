@@ -1,0 +1,1589 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#0a0a0f">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Spark — Défis Sociaux</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-card: #1a1a24;
+            --bg-card-hover: #22222e;
+            --text-primary: #f5f5f7;
+            --text-secondary: #8e8e93;
+            --text-muted: #5e5e63;
+            --accent: #ff6b35;
+            --accent-glow: rgba(255, 107, 53, 0.3);
+            --accent-soft: rgba(255, 107, 53, 0.1);
+            --success: #34c759;
+            --success-soft: rgba(52, 199, 89, 0.15);
+            --border: rgba(255, 255, 255, 0.06);
+            --border-light: rgba(255, 255, 255, 0.1);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 20px;
+            --radius-xl: 28px;
+            --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.4);
+            --font-display: 'Instrument Serif', Georgia, serif;
+            --font-body: 'DM Sans', -apple-system, sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.5;
+            font-size: 16px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* App Container */
+        #app {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            max-width: 480px;
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Screen Management */
+        .screen {
+            display: none;
+            flex-direction: column;
+            height: 100%;
+            opacity: 0;
+            transform: translateX(20px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .screen.active {
+            display: flex;
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Header */
+        .header {
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+        }
+
+        .header-title {
+            font-family: var(--font-display);
+            font-size: 28px;
+            font-weight: 400;
+            letter-spacing: -0.02em;
+        }
+
+        .header-back {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 24px;
+            cursor: pointer;
+            padding: 8px;
+            margin: -8px;
+            transition: color 0.2s;
+        }
+
+        .header-back:hover {
+            color: var(--text-primary);
+        }
+
+        /* Stats Bar */
+        .stats-bar {
+            display: flex;
+            gap: 12px;
+            padding: 0 20px 16px;
+            flex-shrink: 0;
+        }
+
+        .stat-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 12px 16px;
+            flex: 1;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--accent);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 2px;
+        }
+
+        /* Scrollable Content */
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 0 20px 100px;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* Section Headers */
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 24px 0 12px;
+        }
+
+        .section-title {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .section-link {
+            font-size: 13px;
+            color: var(--accent);
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* Daily Challenge Card */
+        .daily-card {
+            background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-secondary) 100%);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-xl);
+            padding: 24px;
+            margin-bottom: 8px;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .daily-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle at top right, var(--accent-soft) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .daily-card:active {
+            transform: scale(0.98);
+        }
+
+        .daily-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 8px;
+        }
+
+        .daily-title {
+            font-family: var(--font-display);
+            font-size: 24px;
+            line-height: 1.3;
+            margin-bottom: 8px;
+        }
+
+        .daily-meta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            color: var(--text-secondary);
+            font-size: 13px;
+        }
+
+        .daily-meta span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Challenge Cards Grid */
+        .challenges-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .challenge-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 16px;
+            cursor: pointer;
+            transition: background 0.2s, border-color 0.2s, transform 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .challenge-card:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--border-light);
+        }
+
+        .challenge-card:active {
+            transform: scale(0.98);
+        }
+
+        .challenge-card.completed {
+            opacity: 0.6;
+        }
+
+        .challenge-level {
+            width: 44px;
+            height: 44px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .level-1 { background: #1a3a2a; color: #4ade80; }
+        .level-2 { background: #1a3a3a; color: #22d3d3; }
+        .level-3 { background: #3a3a1a; color: #facc15; }
+        .level-4 { background: #3a2a1a; color: #fb923c; }
+        .level-5 { background: #3a1a2a; color: #f472b6; }
+
+        .challenge-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .challenge-title {
+            font-weight: 500;
+            font-size: 15px;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .challenge-category {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .challenge-check {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.2s;
+        }
+
+        .challenge-card.completed .challenge-check {
+            background: var(--success);
+            border-color: var(--success);
+            color: white;
+        }
+
+        /* Filter Tabs */
+        .filter-tabs {
+            display: flex;
+            gap: 8px;
+            padding: 0 20px 16px;
+            overflow-x: auto;
+            flex-shrink: 0;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .filter-tabs::-webkit-scrollbar {
+            display: none;
+        }
+
+        .filter-tab {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filter-tab.active {
+            background: var(--text-primary);
+            border-color: var(--text-primary);
+            color: var(--bg-primary);
+        }
+
+        /* Challenge Detail Screen */
+        .detail-content {
+            padding: 20px;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .detail-level-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .detail-title {
+            font-family: var(--font-display);
+            font-size: 32px;
+            line-height: 1.2;
+            margin-bottom: 8px;
+        }
+
+        .detail-category {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+
+        .detail-section {
+            margin-bottom: 24px;
+        }
+
+        .detail-section-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 8px;
+        }
+
+        .detail-section-content {
+            color: var(--text-secondary);
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .detail-tips {
+            background: var(--bg-card);
+            border-radius: var(--radius-md);
+            padding: 16px;
+        }
+
+        .detail-tips li {
+            margin-bottom: 8px;
+            padding-left: 4px;
+        }
+
+        .detail-tips li:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Action Button */
+        .action-bar {
+            padding: 16px 20px;
+            padding-bottom: calc(16px + env(safe-area-inset-bottom));
+            background: linear-gradient(to top, var(--bg-primary) 80%, transparent);
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 16px;
+            border-radius: var(--radius-md);
+            border: none;
+            background: var(--accent);
+            color: white;
+            font-family: var(--font-body);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, opacity 0.2s;
+        }
+
+        .btn-primary:active {
+            transform: scale(0.98);
+            opacity: 0.9;
+        }
+
+        .btn-primary.completed {
+            background: var(--success);
+        }
+
+        /* Evaluation Modal */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: flex-end;
+            justify-content: center;
+            z-index: 100;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+            width: 100%;
+            max-width: 480px;
+            padding: 24px;
+            padding-bottom: calc(24px + env(safe-area-inset-bottom));
+            transform: translateY(100%);
+            transition: transform 0.3s ease-out;
+        }
+
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+        }
+
+        .modal-handle {
+            width: 36px;
+            height: 4px;
+            background: var(--border-light);
+            border-radius: 2px;
+            margin: 0 auto 20px;
+        }
+
+        .modal-title {
+            font-family: var(--font-display);
+            font-size: 24px;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .rating-buttons {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .rating-btn {
+            flex: 1;
+            padding: 16px 8px;
+            border-radius: var(--radius-md);
+            border: 2px solid var(--border);
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .rating-btn:hover {
+            border-color: var(--border-light);
+        }
+
+        .rating-btn.selected {
+            border-color: var(--accent);
+            background: var(--accent-soft);
+            color: var(--text-primary);
+        }
+
+        .rating-label {
+            display: block;
+            font-size: 10px;
+            margin-top: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .notes-input {
+            width: 100%;
+            padding: 14px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            font-size: 15px;
+            resize: none;
+            margin-bottom: 20px;
+        }
+
+        .notes-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .notes-input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            display: flex;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border);
+            padding-bottom: env(safe-area-inset-bottom);
+            flex-shrink: 0;
+        }
+
+        .nav-item {
+            flex: 1;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 10px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .nav-item.active {
+            color: var(--accent);
+        }
+
+        .nav-item svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        /* Progress Screen */
+        .progress-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin-bottom: 12px;
+        }
+
+        .progress-title {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .progress-value {
+            font-size: 32px;
+            font-weight: 600;
+        }
+
+        .level-progress {
+            margin-top: 16px;
+        }
+
+        .level-bar {
+            display: flex;
+            gap: 4px;
+            margin-top: 8px;
+        }
+
+        .level-segment {
+            flex: 1;
+            height: 8px;
+            border-radius: 4px;
+            background: var(--bg-secondary);
+        }
+
+        .level-segment.filled {
+            background: var(--accent);
+        }
+
+        .history-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
+        }
+
+        .history-date {
+            font-size: 12px;
+            color: var(--text-muted);
+            width: 60px;
+            flex-shrink: 0;
+        }
+
+        .history-title {
+            flex: 1;
+            font-size: 14px;
+        }
+
+        .history-rating {
+            font-size: 18px;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+
+        .empty-state svg {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-in {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+
+        .delay-1 { animation-delay: 0.1s; opacity: 0; }
+        .delay-2 { animation-delay: 0.2s; opacity: 0; }
+        .delay-3 { animation-delay: 0.3s; opacity: 0; }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- Home Screen -->
+        <div id="screen-home" class="screen active">
+            <div class="header">
+                <h1 class="header-title">Spark</h1>
+            </div>
+            
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <span class="stat-value" id="stat-streak">0</span>
+                    <span class="stat-label">Jours de suite</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value" id="stat-completed">0</span>
+                    <span class="stat-label">Complétés</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value" id="stat-level">1</span>
+                    <span class="stat-label">Niveau</span>
+                </div>
+            </div>
+
+            <div class="content">
+                <div class="section-header">
+                    <span class="section-title">Défi du jour</span>
+                </div>
+                <div class="daily-card" id="daily-challenge">
+                    <div class="daily-label">Nouveau</div>
+                    <h2 class="daily-title">Chargement...</h2>
+                    <div class="daily-meta">
+                        <span>⚡ Niveau 1</span>
+                        <span>💬 Small talk</span>
+                    </div>
+                </div>
+
+                <div class="section-header">
+                    <span class="section-title">Suggestions</span>
+                    <span class="section-link" onclick="showScreen('catalog')">Voir tout</span>
+                </div>
+                <div class="challenges-grid" id="suggestions-list">
+                    <!-- Dynamically populated -->
+                </div>
+            </div>
+
+            <div class="bottom-nav">
+                <div class="nav-item active" onclick="showScreen('home')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                        <polyline points="9 22 9 12 15 12 15 22"/>
+                    </svg>
+                    Accueil
+                </div>
+                <div class="nav-item" onclick="showScreen('catalog')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="7" height="7"/>
+                        <rect x="14" y="3" width="7" height="7"/>
+                        <rect x="14" y="14" width="7" height="7"/>
+                        <rect x="3" y="14" width="7" height="7"/>
+                    </svg>
+                    Défis
+                </div>
+                <div class="nav-item" onclick="showScreen('progress')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="20" x2="18" y2="10"/>
+                        <line x1="12" y1="20" x2="12" y2="4"/>
+                        <line x1="6" y1="20" x2="6" y2="14"/>
+                    </svg>
+                    Progrès
+                </div>
+            </div>
+        </div>
+
+        <!-- Catalog Screen -->
+        <div id="screen-catalog" class="screen">
+            <div class="header">
+                <h1 class="header-title">Tous les défis</h1>
+            </div>
+
+            <div class="filter-tabs" id="filter-tabs">
+                <button class="filter-tab active" data-filter="all">Tous</button>
+                <button class="filter-tab" data-filter="small-talk">Small talk</button>
+                <button class="filter-tab" data-filter="assertivite">Assertivité</button>
+                <button class="filter-tab" data-filter="connexion">Connexion</button>
+                <button class="filter-tab" data-filter="vulnerabilite">Vulnérabilité</button>
+                <button class="filter-tab" data-filter="inconfort">Inconfort</button>
+            </div>
+
+            <div class="content">
+                <div class="challenges-grid" id="catalog-list">
+                    <!-- Dynamically populated -->
+                </div>
+            </div>
+
+            <div class="bottom-nav">
+                <div class="nav-item" onclick="showScreen('home')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                        <polyline points="9 22 9 12 15 12 15 22"/>
+                    </svg>
+                    Accueil
+                </div>
+                <div class="nav-item active" onclick="showScreen('catalog')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="7" height="7"/>
+                        <rect x="14" y="3" width="7" height="7"/>
+                        <rect x="14" y="14" width="7" height="7"/>
+                        <rect x="3" y="14" width="7" height="7"/>
+                    </svg>
+                    Défis
+                </div>
+                <div class="nav-item" onclick="showScreen('progress')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="20" x2="18" y2="10"/>
+                        <line x1="12" y1="20" x2="12" y2="4"/>
+                        <line x1="6" y1="20" x2="6" y2="14"/>
+                    </svg>
+                    Progrès
+                </div>
+            </div>
+        </div>
+
+        <!-- Challenge Detail Screen -->
+        <div id="screen-detail" class="screen">
+            <div class="header">
+                <button class="header-back" onclick="goBack()">←</button>
+                <span></span>
+            </div>
+
+            <div class="detail-content" id="detail-content">
+                <!-- Dynamically populated -->
+            </div>
+
+            <div class="action-bar">
+                <button class="btn-primary" id="detail-action-btn" onclick="handleChallengeAction()">
+                    C'est fait !
+                </button>
+            </div>
+        </div>
+
+        <!-- Progress Screen -->
+        <div id="screen-progress" class="screen">
+            <div class="header">
+                <h1 class="header-title">Progrès</h1>
+            </div>
+
+            <div class="content">
+                <div class="progress-card animate-in">
+                    <div class="progress-title">Défis complétés</div>
+                    <div class="progress-value" id="progress-total">0</div>
+                </div>
+
+                <div class="progress-card animate-in delay-1">
+                    <div class="progress-title">Meilleure série</div>
+                    <div class="progress-value"><span id="progress-streak">0</span> jours</div>
+                </div>
+
+                <div class="progress-card animate-in delay-2">
+                    <div class="progress-title">Niveau actuel</div>
+                    <div class="progress-value">Niveau <span id="progress-level">1</span></div>
+                    <div class="level-progress">
+                        <small style="color: var(--text-muted)">Prochain niveau dans <span id="progress-next">5</span> défis</small>
+                        <div class="level-bar" id="level-bar">
+                            <!-- Dynamically populated -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-header animate-in delay-3">
+                    <span class="section-title">Historique récent</span>
+                </div>
+                <div id="history-list">
+                    <!-- Dynamically populated -->
+                </div>
+            </div>
+
+            <div class="bottom-nav">
+                <div class="nav-item" onclick="showScreen('home')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                        <polyline points="9 22 9 12 15 12 15 22"/>
+                    </svg>
+                    Accueil
+                </div>
+                <div class="nav-item" onclick="showScreen('catalog')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="7" height="7"/>
+                        <rect x="14" y="3" width="7" height="7"/>
+                        <rect x="14" y="14" width="7" height="7"/>
+                        <rect x="3" y="14" width="7" height="7"/>
+                    </svg>
+                    Défis
+                </div>
+                <div class="nav-item active" onclick="showScreen('progress')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="20" x2="18" y2="10"/>
+                        <line x1="12" y1="20" x2="12" y2="4"/>
+                        <line x1="6" y1="20" x2="6" y2="14"/>
+                    </svg>
+                    Progrès
+                </div>
+            </div>
+        </div>
+
+        <!-- Evaluation Modal -->
+        <div class="modal-overlay" id="eval-modal">
+            <div class="modal">
+                <div class="modal-handle"></div>
+                <h2 class="modal-title">Comment ça s'est passé ?</h2>
+                
+                <div class="rating-buttons" id="rating-buttons">
+                    <button class="rating-btn" data-rating="1">
+                        😰
+                        <span class="rating-label">Dur</span>
+                    </button>
+                    <button class="rating-btn" data-rating="2">
+                        😐
+                        <span class="rating-label">Moyen</span>
+                    </button>
+                    <button class="rating-btn" data-rating="3">
+                        🙂
+                        <span class="rating-label">Bien</span>
+                    </button>
+                    <button class="rating-btn" data-rating="4">
+                        😊
+                        <span class="rating-label">Super</span>
+                    </button>
+                    <button class="rating-btn" data-rating="5">
+                        🤩
+                        <span class="rating-label">Top !</span>
+                    </button>
+                </div>
+
+                <textarea class="notes-input" id="notes-input" rows="3" placeholder="Notes personnelles (optionnel)..."></textarea>
+
+                <button class="btn-primary" id="save-eval-btn" onclick="saveEvaluation()">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // DATA - Challenges Database
+        // ============================================
+        const challenges = [
+            // Niveau 1 - Très facile
+            {
+                id: 1,
+                title: "Dire bonjour à un inconnu",
+                category: "small-talk",
+                categoryLabel: "Small talk",
+                level: 1,
+                description: "Dis bonjour ou souris à une personne que tu croises. C'est tout.",
+                context: "Dans la rue, un couloir, l'ascenseur, une file d'attente... N'importe où.",
+                tips: [
+                    "Un simple \"Bonjour\" ou un hochement de tête suffit",
+                    "Pas besoin d'engager une conversation",
+                    "Si la personne ne répond pas, ce n'est pas grave"
+                ]
+            },
+            {
+                id: 2,
+                title: "Faire un compliment sincère",
+                category: "small-talk",
+                categoryLabel: "Small talk",
+                level: 1,
+                description: "Fais un compliment authentique à quelqu'un : collègue, vendeur, serveur, ami.",
+                context: "Choisis quelque chose que tu remarques vraiment et qui te plaît.",
+                tips: [
+                    "Sois spécifique : \"J'aime bien ta montre\" plutôt que \"T'es cool\"",
+                    "Reste simple et naturel",
+                    "N'attends pas de réponse particulière"
+                ]
+            },
+            {
+                id: 3,
+                title: "Remercier avec intention",
+                category: "connexion",
+                categoryLabel: "Connexion",
+                level: 1,
+                description: "Remercie quelqu'un en le regardant dans les yeux et en étant vraiment présent.",
+                context: "Un serveur, un caissier, un collègue qui t'aide...",
+                tips: [
+                    "Prends 2 secondes de plus que d'habitude",
+                    "Contact visuel + sourire",
+                    "Utilise son prénom si tu le connais"
+                ]
+            },
+            {
+                id: 4,
+                title: "Demander l'heure ou une direction",
+                category: "small-talk",
+                categoryLabel: "Small talk",
+                level: 1,
+                description: "Aborde un inconnu pour lui demander l'heure ou une direction, même si tu n'en as pas besoin.",
+                context: "L'objectif est de pratiquer l'approche, pas d'obtenir l'info.",
+                tips: [
+                    "\"Excusez-moi, vous avez l'heure ?\"",
+                    "\"Pardon, vous savez où est la station de métro ?\"",
+                    "Remercie et passe ton chemin"
+                ]
+            },
+
+            // Niveau 2 - Facile
+            {
+                id: 5,
+                title: "Poser une question de suivi",
+                category: "connexion",
+                categoryLabel: "Connexion",
+                level: 2,
+                description: "Quand quelqu'un te raconte quelque chose, pose une question pour creuser.",
+                context: "Au lieu de juste hocher la tête, montre un intérêt actif.",
+                tips: [
+                    "\"Ah c'était comment ?\"",
+                    "\"Et qu'est-ce que t'en as pensé ?\"",
+                    "\"C'est quoi la suite ?\"",
+                    "Écoute vraiment la réponse"
+                ]
+            },
+            {
+                id: 6,
+                title: "Initier le small talk",
+                category: "small-talk",
+                categoryLabel: "Small talk",
+                level: 2,
+                description: "Lance une micro-conversation avec quelqu'un dans une situation d'attente.",
+                context: "File d'attente, salle d'attente, ascenseur, transports...",
+                tips: [
+                    "Commente la situation : \"Y'a du monde aujourd'hui\"",
+                    "Pose une question simple : \"Vous savez si c'est toujours comme ça ?\"",
+                    "2-3 échanges suffisent"
+                ]
+            },
+            {
+                id: 7,
+                title: "Maintenir le contact visuel",
+                category: "connexion",
+                categoryLabel: "Connexion",
+                level: 2,
+                description: "Pendant une conversation, maintiens le contact visuel plus longtemps que d'habitude.",
+                context: "Lors d'une conversation normale avec quelqu'un.",
+                tips: [
+                    "Regarde entre les yeux si c'est plus facile",
+                    "Détourne le regard naturellement de temps en temps",
+                    "Observe comment l'autre réagit"
+                ]
+            },
+            {
+                id: 8,
+                title: "Exprimer une préférence mineure",
+                category: "assertivite",
+                categoryLabel: "Assertivité",
+                level: 2,
+                description: "Exprime une préférence au lieu d'accepter le défaut.",
+                context: "Au restaurant, dans un magasin, avec des amis...",
+                tips: [
+                    "\"Je préférerais la table près de la fenêtre\"",
+                    "\"Est-ce que je pourrais avoir... à la place ?\"",
+                    "Reste poli mais affirme ton choix"
+                ]
+            },
+
+            // Niveau 3 - Intermédiaire
+            {
+                id: 9,
+                title: "Conversation de 2+ minutes avec un inconnu",
+                category: "small-talk",
+                categoryLabel: "Small talk",
+                level: 3,
+                description: "Engage une vraie conversation avec un inconnu, pas juste un échange.",
+                context: "Événement, soirée, salle d'attente, bar, conférence...",
+                tips: [
+                    "Commence par un commentaire sur le contexte",
+                    "Pose des questions ouvertes",
+                    "Partage aussi quelque chose sur toi",
+                    "C'est OK si ça dure moins de 2 min"
+                ]
+            },
+            {
+                id: 10,
+                title: "Dire non sans te justifier",
+                category: "assertivite",
+                categoryLabel: "Assertivité",
+                level: 3,
+                description: "Refuse une demande ou invitation sans donner d'excuse élaborée.",
+                context: "Quelqu'un te demande un service, une sortie, un engagement...",
+                tips: [
+                    "\"Non, je ne peux pas cette fois\"",
+                    "\"Merci mais ça ne va pas être possible\"",
+                    "Pas besoin de mentir ou d'inventer une excuse"
+                ]
+            },
+            {
+                id: 11,
+                title: "Donner ton avis sans qu'on te le demande",
+                category: "assertivite",
+                categoryLabel: "Assertivité",
+                level: 3,
+                description: "Dans une conversation de groupe, partage ton opinion spontanément.",
+                context: "Réunion, discussion entre amis, débat informel...",
+                tips: [
+                    "\"Moi je pense que...\"",
+                    "\"Perso, je vois ça différemment\"",
+                    "Tu n'as pas besoin d'avoir raison"
+                ]
+            },
+            {
+                id: 12,
+                title: "Reconnecter avec une vieille connaissance",
+                category: "connexion",
+                categoryLabel: "Connexion",
+                level: 3,
+                description: "Envoie un message à quelqu'un que tu n'as pas contacté depuis longtemps.",
+                context: "Ancien collègue, ami perdu de vue, ancienne connaissance...",
+                tips: [
+                    "\"Hey ! Je pensais à toi, comment tu vas ?\"",
+                    "Mentionne un souvenir partagé",
+                    "Pas besoin d'avoir de raison particulière"
+                ]
+            },
+
+            // Niveau 4 - Difficile
+            {
+                id: 13,
+                title: "Proposer un café à une connaissance",
+                category: "connexion",
+                categoryLabel: "Connexion",
+                level: 4,
+                description: "Invite quelqu'un que tu connais peu mais que tu aimerais mieux connaître.",
+                context: "Collègue, voisin, connaissance de sport/hobby, ami d'ami...",
+                tips: [
+                    "\"Ça te dirait qu'on prenne un café un de ces jours ?\"",
+                    "Propose une date concrète",
+                    "Un refus n'est pas personnel"
+                ]
+            },
+            {
+                id: 14,
+                title: "Exprimer un désaccord respectueusement",
+                category: "assertivite",
+                categoryLabel: "Assertivité",
+                level: 4,
+                description: "Quand tu n'es pas d'accord avec quelqu'un, dis-le clairement mais avec respect.",
+                context: "Discussion, réunion, débat...",
+                tips: [
+                    "\"Je vois les choses différemment...\"",
+                    "\"Je comprends ton point, mais...\"",
+                    "Argumente sans attaquer"
+                ]
+            },
+            {
+                id: 15,
+                title: "Demander du feedback",
+                category: "vulnerabilite",
+                categoryLabel: "Vulnérabilité",
+                level: 4,
+                description: "Demande à quelqu'un ce qu'il pense vraiment de quelque chose que tu as fait.",
+                context: "Travail, projet perso, comportement, présentation...",
+                tips: [
+                    "\"Sois honnête, qu'est-ce que t'en as pensé ?\"",
+                    "Écoute sans te défendre",
+                    "Remercie même si c'est dur à entendre"
+                ]
+            },
+            {
+                id: 16,
+                title: "Admettre que tu ne sais pas",
+                category: "vulnerabilite",
+                categoryLabel: "Vulnérabilité",
+                level: 4,
+                description: "Dans une conversation où tu es censé savoir, admets ton ignorance.",
+                context: "Réunion, discussion technique, débat...",
+                tips: [
+                    "\"Honnêtement, je ne sais pas\"",
+                    "\"C'est une bonne question, je vais me renseigner\"",
+                    "C'est souvent perçu positivement"
+                ]
+            },
+
+            // Niveau 5 - Expert
+            {
+                id: 17,
+                title: "Partager quelque chose de personnel",
+                category: "vulnerabilite",
+                categoryLabel: "Vulnérabilité",
+                level: 5,
+                description: "Partage une difficulté, une peur ou une insécurité avec quelqu'un de confiance.",
+                context: "Conversation intime avec un ami, proche, ou même nouvelle connaissance.",
+                tips: [
+                    "Choisis le bon moment et la bonne personne",
+                    "Tu n'as pas besoin de tout déballer",
+                    "Observe comment ça approfondit la connexion"
+                ]
+            },
+            {
+                id: 18,
+                title: "Tenir un silence sans le combler",
+                category: "inconfort",
+                categoryLabel: "Inconfort",
+                level: 5,
+                description: "Quand un silence s'installe dans une conversation, ne le remplis pas.",
+                context: "Laisse l'autre personne reprendre la parole.",
+                tips: [
+                    "Respire et reste présent",
+                    "Maintiens un langage corporel ouvert",
+                    "Le silence n'est pas toujours gênant"
+                ]
+            },
+            {
+                id: 19,
+                title: "Donner un feedback difficile",
+                category: "assertivite",
+                categoryLabel: "Assertivité",
+                level: 5,
+                description: "Dis à quelqu'un quelque chose qu'il a besoin d'entendre, même si c'est inconfortable.",
+                context: "Un ami, collègue, proche... quelque chose de constructif.",
+                tips: [
+                    "Sois direct mais bienveillant",
+                    "Parle de l'impact sur toi",
+                    "Propose une solution si possible"
+                ]
+            },
+            {
+                id: 20,
+                title: "Aborder un conflit latent",
+                category: "inconfort",
+                categoryLabel: "Inconfort",
+                level: 5,
+                description: "Parle d'un sujet de tension que tu évites avec quelqu'un.",
+                context: "Quelque chose qui te pèse et que tu repousses.",
+                tips: [
+                    "\"J'aimerais qu'on parle de quelque chose...\"",
+                    "Exprime tes sentiments sans accuser",
+                    "Écoute sa perspective"
+                ]
+            }
+        ];
+
+        // ============================================
+        // STATE MANAGEMENT
+        // ============================================
+        let state = {
+            completions: [],
+            streak: 0,
+            lastCompletedDate: null,
+            currentChallengeId: null,
+            currentRating: null,
+            currentScreen: 'home',
+            previousScreen: 'home',
+            currentFilter: 'all'
+        };
+
+        // Load state from localStorage
+        function loadState() {
+            const saved = localStorage.getItem('spark_state');
+            if (saved) {
+                state = { ...state, ...JSON.parse(saved) };
+            }
+            updateStreak();
+        }
+
+        // Save state to localStorage
+        function saveState() {
+            localStorage.setItem('spark_state', JSON.stringify(state));
+        }
+
+        // Update streak based on dates
+        function updateStreak() {
+            const today = new Date().toDateString();
+            const yesterday = new Date(Date.now() - 86400000).toDateString();
+            
+            if (state.lastCompletedDate === today) {
+                // Already completed today, keep streak
+            } else if (state.lastCompletedDate === yesterday) {
+                // Completed yesterday, streak continues
+            } else if (state.lastCompletedDate !== today) {
+                // Streak broken (unless completing today)
+                if (state.lastCompletedDate && state.lastCompletedDate !== yesterday) {
+                    state.streak = 0;
+                }
+            }
+        }
+
+        // ============================================
+        // NAVIGATION
+        // ============================================
+        function showScreen(screenId) {
+            state.previousScreen = state.currentScreen;
+            state.currentScreen = screenId;
+            
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(`screen-${screenId}`).classList.add('active');
+            
+            // Update nav
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.querySelector(`.nav-item[onclick="showScreen('${screenId}')"]`)?.classList.add('active');
+            
+            // Refresh content
+            if (screenId === 'home') renderHome();
+            if (screenId === 'catalog') renderCatalog();
+            if (screenId === 'progress') renderProgress();
+        }
+
+        function goBack() {
+            showScreen(state.previousScreen || 'home');
+        }
+
+        function showDetail(challengeId) {
+            state.currentChallengeId = challengeId;
+            renderDetail(challengeId);
+            showScreen('detail');
+        }
+
+        // ============================================
+        // RENDERING
+        // ============================================
+        function renderHome() {
+            // Update stats
+            document.getElementById('stat-streak').textContent = state.streak;
+            document.getElementById('stat-completed').textContent = state.completions.length;
+            document.getElementById('stat-level').textContent = calculateLevel();
+
+            // Daily challenge
+            const daily = getDailyChallenge();
+            const dailyCard = document.getElementById('daily-challenge');
+            const isCompleted = isChallengeCompletedToday(daily.id);
+            
+            dailyCard.innerHTML = `
+                <div class="daily-label">${isCompleted ? '✓ Complété' : 'Nouveau'}</div>
+                <h2 class="daily-title">${daily.title}</h2>
+                <div class="daily-meta">
+                    <span>⚡ Niveau ${daily.level}</span>
+                    <span>💬 ${daily.categoryLabel}</span>
+                </div>
+            `;
+            dailyCard.onclick = () => showDetail(daily.id);
+
+            // Suggestions (3 random uncompleted challenges at current level)
+            const suggestions = getSuggestions(3);
+            const suggestionsList = document.getElementById('suggestions-list');
+            suggestionsList.innerHTML = suggestions.map(c => renderChallengeCard(c)).join('');
+        }
+
+        function renderCatalog() {
+            const filtered = state.currentFilter === 'all' 
+                ? challenges 
+                : challenges.filter(c => c.category === state.currentFilter);
+            
+            const catalogList = document.getElementById('catalog-list');
+            catalogList.innerHTML = filtered.map(c => renderChallengeCard(c)).join('');
+
+            // Update filter tabs
+            document.querySelectorAll('.filter-tab').forEach(tab => {
+                tab.classList.toggle('active', tab.dataset.filter === state.currentFilter);
+            });
+        }
+
+        function renderChallengeCard(challenge) {
+            const completed = isChallengeCompletedToday(challenge.id);
+            return `
+                <div class="challenge-card ${completed ? 'completed' : ''}" onclick="showDetail(${challenge.id})">
+                    <div class="challenge-level level-${challenge.level}">
+                        ${challenge.level}
+                    </div>
+                    <div class="challenge-info">
+                        <div class="challenge-title">${challenge.title}</div>
+                        <div class="challenge-category">${challenge.categoryLabel}</div>
+                    </div>
+                    <div class="challenge-check">
+                        ${completed ? '✓' : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderDetail(challengeId) {
+            const challenge = challenges.find(c => c.id === challengeId);
+            const completed = isChallengeCompletedToday(challenge.id);
+            
+            const content = document.getElementById('detail-content');
+            content.innerHTML = `
+                <div class="detail-level-badge level-${challenge.level}">
+                    ⚡ Niveau ${challenge.level}
+                </div>
+                <h1 class="detail-title">${challenge.title}</h1>
+                <p class="detail-category">${challenge.categoryLabel}</p>
+                
+                <div class="detail-section">
+                    <h3 class="detail-section-title">Le défi</h3>
+                    <p class="detail-section-content">${challenge.description}</p>
+                </div>
+                
+                <div class="detail-section">
+                    <h3 class="detail-section-title">Contexte</h3>
+                    <p class="detail-section-content">${challenge.context}</p>
+                </div>
+                
+                <div class="detail-section">
+                    <h3 class="detail-section-title">Conseils</h3>
+                    <ul class="detail-tips detail-section-content">
+                        ${challenge.tips.map(t => `<li>${t}</li>`).join('')}
+                    </ul>
+                </div>
+            `;
+
+            const btn = document.getElementById('detail-action-btn');
+            if (completed) {
+                btn.textContent = '✓ Déjà complété aujourd\'hui';
+                btn.classList.add('completed');
+            } else {
+                btn.textContent = 'C\'est fait !';
+                btn.classList.remove('completed');
+            }
+        }
+
+        function renderProgress() {
+            const total = state.completions.length;
+            const level = calculateLevel();
+            const nextLevel = (level * 5) - total;
+            
+            document.getElementById('progress-total').textContent = total;
+            document.getElementById('progress-streak').textContent = state.streak;
+            document.getElementById('progress-level').textContent = level;
+            document.getElementById('progress-next').textContent = Math.max(0, nextLevel);
+
+            // Level bar
+            const progress = total % 5;
+            const levelBar = document.getElementById('level-bar');
+            levelBar.innerHTML = Array(5).fill(0).map((_, i) => 
+                `<div class="level-segment ${i < progress ? 'filled' : ''}"></div>`
+            ).join('');
+
+            // History
+            const historyList = document.getElementById('history-list');
+            const recent = [...state.completions].reverse().slice(0, 10);
+            
+            if (recent.length === 0) {
+                historyList.innerHTML = `
+                    <div class="empty-state">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        <p>Aucun défi complété pour l'instant</p>
+                    </div>
+                `;
+            } else {
+                historyList.innerHTML = recent.map(comp => {
+                    const challenge = challenges.find(c => c.id === comp.challengeId);
+                    const date = new Date(comp.date);
+                    const dateStr = date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
+                    const ratings = ['😰', '😐', '🙂', '😊', '🤩'];
+                    return `
+                        <div class="history-item">
+                            <span class="history-date">${dateStr}</span>
+                            <span class="history-title">${challenge?.title || 'Défi inconnu'}</span>
+                            <span class="history-rating">${ratings[comp.rating - 1] || ''}</span>
+                        </div>
+                    `;
+                }).join('');
+            }
+        }
+
+        // ============================================
+        // ACTIONS
+        // ============================================
+        function handleChallengeAction() {
+            const challenge = challenges.find(c => c.id === state.currentChallengeId);
+            if (isChallengeCompletedToday(challenge.id)) return;
+            
+            openEvalModal();
+        }
+
+        function openEvalModal() {
+            state.currentRating = null;
+            document.querySelectorAll('.rating-btn').forEach(b => b.classList.remove('selected'));
+            document.getElementById('notes-input').value = '';
+            document.getElementById('eval-modal').classList.add('active');
+        }
+
+        function closeEvalModal() {
+            document.getElementById('eval-modal').classList.remove('active');
+        }
+
+        function saveEvaluation() {
+            if (!state.currentRating) {
+                // Highlight rating buttons
+                document.querySelector('.rating-buttons').style.animation = 'shake 0.3s';
+                setTimeout(() => {
+                    document.querySelector('.rating-buttons').style.animation = '';
+                }, 300);
+                return;
+            }
+
+            const completion = {
+                challengeId: state.currentChallengeId,
+                date: new Date().toISOString(),
+                rating: state.currentRating,
+                notes: document.getElementById('notes-input').value
+            };
+
+            state.completions.push(completion);
+            
+            // Update streak
+            const today = new Date().toDateString();
+            if (state.lastCompletedDate !== today) {
+                const yesterday = new Date(Date.now() - 86400000).toDateString();
+                if (state.lastCompletedDate === yesterday || !state.lastCompletedDate) {
+                    state.streak++;
+                } else {
+                    state.streak = 1;
+                }
+                state.lastCompletedDate = today;
+            }
+
+            saveState();
+            closeEvalModal();
+            renderDetail(state.currentChallengeId);
+        }
+
+        // ============================================
+        // HELPERS
+        // ============================================
+        function getDailyChallenge() {
+            // Deterministic daily challenge based on date
+            const today = new Date();
+            const seed = today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
+            const index = seed % challenges.length;
+            return challenges[index];
+        }
+
+        function getSuggestions(count) {
+            const level = calculateLevel();
+            const todayCompleted = state.completions
+                .filter(c => new Date(c.date).toDateString() === new Date().toDateString())
+                .map(c => c.challengeId);
+            
+            const available = challenges.filter(c => 
+                !todayCompleted.includes(c.id) && 
+                c.level <= level + 1
+            );
+            
+            // Shuffle and take first 'count'
+            return available.sort(() => Math.random() - 0.5).slice(0, count);
+        }
+
+        function isChallengeCompletedToday(challengeId) {
+            const today = new Date().toDateString();
+            return state.completions.some(c => 
+                c.challengeId === challengeId && 
+                new Date(c.date).toDateString() === today
+            );
+        }
+
+        function calculateLevel() {
+            return Math.floor(state.completions.length / 5) + 1;
+        }
+
+        // ============================================
+        // EVENT LISTENERS
+        // ============================================
+        document.addEventListener('DOMContentLoaded', () => {
+            loadState();
+            renderHome();
+
+            // Filter tabs
+            document.querySelectorAll('.filter-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    state.currentFilter = tab.dataset.filter;
+                    renderCatalog();
+                });
+            });
+
+            // Rating buttons
+            document.querySelectorAll('.rating-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    state.currentRating = parseInt(btn.dataset.rating);
+                    document.querySelectorAll('.rating-btn').forEach(b => b.classList.remove('selected'));
+                    btn.classList.add('selected');
+                });
+            });
+
+            // Close modal on overlay click
+            document.getElementById('eval-modal').addEventListener('click', (e) => {
+                if (e.target.id === 'eval-modal') closeEvalModal();
+            });
+        });
+
+        // PWA Install
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').catch(() => {});
+        }
+    </script>
+</body>
+</html>
